@@ -1,27 +1,47 @@
-// ignore_for_file: camel_case_types, prefer_const_constructors, avoid_print
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uts/screens/doctor_menu.dart';
 
 class homepage extends StatefulWidget {
-   homepage({super.key});
-
-
-
-
-
+  homepage({super.key});
   @override
   State<homepage> createState() => _homepageState();
 }
 
 class _homepageState extends State<homepage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String username = "";
 
-    final user = FirebaseAuth.instance.currentUser!;
-    
+  Future<Map<String, dynamic>> getData() async {
+    QuerySnapshot querySnapshot = await _firestore.collection('doctors').get();
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first.data() as Map<String, dynamic>;
+    } else {
+      return {};
+    }
+  }
+
   @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(user.uid).get();
+      setState(() {
+        username = userDoc['username'];
+      });
+    }
+  }
+
   Widget build(BuildContext context) {
-    final userDisplayName = user.displayName ?? user.email ?? 'User';
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -47,35 +67,35 @@ class _homepageState extends State<homepage> {
         selectedItemColor: Colors.blue[800],
       ),
       backgroundColor: Colors.white,
-       body: SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
             margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 30),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/hutao.jpg'),
-                      ),
-                      SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Hello', style: TextStyle(fontSize: 15)),
-                          Text(
-                            userDisplayName,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Icon(Icons.notifications),
-                    ],
-                  ),
+            child: Column(children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 30),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/hutao.jpg'),
+                    ),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Hello', style: TextStyle(fontSize: 15)),
+                        Text(
+                          '$username!',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Icon(Icons.notifications),
+                  ],
                 ),
+              ),
               Container(
                 decoration: BoxDecoration(
                     border: Border.all(width: 2.0, color: Colors.blue.shade900),
@@ -483,198 +503,100 @@ class _homepageState extends State<homepage> {
                           ],
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              print('Item pertama ditekan');
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: 130,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    image: const DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/Rectangle22.png'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 130,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: const [
-                                        Colors.transparent,
-                                        Colors.white,
-                                       
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 130,
-                                  width: 100,
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 10.0),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: const [
-                                        Text(
-                                          "Kumar \nSingh",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16.0,
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('doctors')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text("Error: ${snapshot.error}"));
+                          } else {
+                            final doctors = snapshot.data!.docs;
+                            if (doctors.isEmpty) {
+                              return const Center(child: Text("No Data Found"));
+                            } else {
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: doctors.map((doctor) {
+                                  final imageUrl = doctor['image'];
+                                  final name = doctor['name'];
+                                  final specialist = doctor['specialist'];
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      print('Item pertama ditekan');
+                                    },
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          height: 130,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            image: DecorationImage(
+                                              image: NetworkImage(imageUrl),
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
-                                        Text(
-                                          "Nophthalmologist",
-                                          style: TextStyle(fontSize: 10.0),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              print('Item kedua ditekan');
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: 130,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    image: const DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/Rectangle23.jpg'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 130,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: const [
-                                        Colors.transparent,
-                                        Colors.white,
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 130,
-                                  width: 100,
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 10.0),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: const [
-                                        Text(
-                                          "Jenny",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16.0,
+                                        Container(
+                                          height: 130,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            gradient: const LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: [
+                                                Colors.transparent,
+                                                Colors.white,
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        Text(
-                                          "Dentist",
-                                          style: TextStyle(fontSize: 10.0),
+                                        SizedBox(
+                                          height: 130,
+                                          width: 100,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 10.0),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  name,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 16.0,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  specialist,
+                                                  style: const TextStyle(
+                                                      fontSize: 10.0),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DoctorMenu()),
+                                  );
+                                }).toList(),
                               );
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: 130,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    image: const DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/Rectangle24.png'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 130,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: const [
-                                        Colors.transparent,
-                                        Colors.white,
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 130,
-                                  width: 100,
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 10.0),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: const [
-                                        Text(
-                                          "Chen Xi",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16.0,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Nutritionist",
-                                          style: TextStyle(fontSize: 10.0),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                            }
+                          }
+                        },
                       ),
                     ],
                   )),

@@ -1,39 +1,52 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uts/components/my_textfield.dart';
-
 import 'package:flutter/gestures.dart';
 import 'package:uts/screens/homepage.dart';
 import 'package:uts/screens/register_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   // text editing controller
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // //sign user in method
-  // void signUserIn()async {
-  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //     email: usernameController.text , password: passwordController.text,
-  //     );
-  // }
-
-   // Sign user in method
+  // Sign user in method
   Future<void> signUserIn(BuildContext context) async {
     try {
-      if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
+      if (emailController.text.isEmpty || passwordController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Please fill in both fields')),
         );
         return;
       }
 
+      String input = emailController.text.trim();
+      String password = passwordController.text.trim();
+
+      // Check if input is an email or NIK
+      String? email;
+      if (input.contains('@')) {
+        // Input is an email
+        email = input;
+      } else {
+        // Input is assumed to be a NIK, get email from Firestore
+        email = await _getEmailFromNik(input);
+        if (email == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('No user found for that NIK.')),
+          );
+          return;
+        }
+      }
+
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: usernameController.text,
-        password: passwordController.text,
+        email: email,
+        password: password,
       );
+
       // Navigate to homepage if sign-in is successful
       Navigator.pushReplacement(
         context,
@@ -55,8 +68,23 @@ class LoginPage extends StatelessWidget {
     }
   }
 
-
-
+  // Method to get email from NIK
+  Future<String?> _getEmailFromNik(String nik) async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('nik', isEqualTo: nik)
+          .limit(1)
+          .get();
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot.docs.first.get('email');
+      }
+      return null;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +95,7 @@ class LoginPage extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 50),
 
               // login
               const Text(
@@ -85,17 +111,18 @@ class LoginPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 30),
-              //email
+
+              // email/NIK
               MyTextField(
-                controller: usernameController,
-                hintText: 'Enter Your Email',
+                controller: emailController,
+                hintText: 'Enter Your Email / NIK',
                 prefixIcon: Icons.email,
                 obscureText: false,
               ),
 
               const SizedBox(height: 15),
 
-              //password
+              // password
               MyTextField(
                 controller: passwordController,
                 prefixIcon: Icons.key,
@@ -105,7 +132,7 @@ class LoginPage extends StatelessWidget {
 
               const SizedBox(height: 10),
 
-              //forget password
+              // forget password
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
@@ -113,15 +140,16 @@ class LoginPage extends StatelessWidget {
                   children: [
                     Text.rich(
                       TextSpan(
-                          text: 'Forget your password?',
-                          style: const TextStyle(
-                            color: Color(0xFF205295),
-                            fontSize: 13,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w600,
-                            height: 0,
-                          ),
-                          recognizer: TapGestureRecognizer()..onTap = () {}),
+                        text: 'Forget your password?',
+                        style: const TextStyle(
+                          color: Color(0xFF205295),
+                          fontSize: 13,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w600,
+                          height: 0,
+                        ),
+                        recognizer: TapGestureRecognizer()..onTap = () {},
+                      ),
                     )
                   ],
                 ),
@@ -129,8 +157,8 @@ class LoginPage extends StatelessWidget {
 
               const SizedBox(height: 25),
 
-              //login button
-                    SizedBox(
+              // login button
+              SizedBox(
                 width: 358,
                 child: ElevatedButton(
                   onPressed: () => signUserIn(context),
@@ -156,20 +184,21 @@ class LoginPage extends StatelessWidget {
 
               const SizedBox(height: 15),
 
-              //tidak punya akun dan signup
+              // tidak punya akun dan signup
               Text.rich(
-                TextSpan(children: [
-                  const TextSpan(
-                    text: 'Tidak punya akun? ',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 0,
+                TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: 'Tidak punya akun? ',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        height: 0,
+                      ),
                     ),
-                  ),
-                  TextSpan(
+                    TextSpan(
                       text: 'Sign Up',
                       style: const TextStyle(
                         color: Color(0xFF205295),
@@ -185,13 +214,15 @@ class LoginPage extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => RegisterPage()),
                           );
-                        }),
-                ]),
+                        },
+                    ),
+                  ],
+                ),
               ),
 
               const SizedBox(height: 50),
 
-              //or continue with
+              // or continue with
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
@@ -218,7 +249,7 @@ class LoginPage extends StatelessWidget {
 
               const SizedBox(height: 25),
 
-              //google + apple + facebook
+              // google + apple + facebook
               Row(
                 children: [
                   const SizedBox(width: 25),
@@ -227,14 +258,18 @@ class LoginPage extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 17,
+                        backgroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 17,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                            width: 2,
+                            color: Color(0xCC205295),
                           ),
-                          shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  width: 2, color: Color(0xCC205295)),
-                              borderRadius: BorderRadius.circular(18))),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
                       child: Image.asset('assets/images/Ggoogle.webp',
                           height: 35, width: 35),
                     ),
@@ -245,14 +280,18 @@ class LoginPage extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 17,
+                        backgroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 17,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                            width: 2,
+                            color: Color(0xCC205295),
                           ),
-                          shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  width: 2, color: Color(0xCC205295)),
-                              borderRadius: BorderRadius.circular(18))),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
                       child: Image.asset('assets/images/apple.png',
                           height: 35, width: 35),
                     ),
@@ -263,20 +302,24 @@ class LoginPage extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 17,
+                        backgroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 17,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                            width: 2,
+                            color: Color(0xCC205295),
                           ),
-                          shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  width: 2, color: Color(0xCC205295)),
-                              borderRadius: BorderRadius.circular(18))),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
                       child: Image.asset('assets/images/facebook.png',
                           height: 35, width: 35),
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -284,23 +327,3 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
-
-
-//catatan
-
-  // SizedBox(
-              //   width: 358,
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(builder: (context) => homepage()),
-              //       );
-              //     },
-              //     style: ElevatedButton.styleFrom(
-              //         backgroundColor: const Color(0xFF205295),
-              //         padding: const EdgeInsets.symmetric(
-              //           vertical: 17,
-              //         ),
-              //         shape: RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.circular(18))),
