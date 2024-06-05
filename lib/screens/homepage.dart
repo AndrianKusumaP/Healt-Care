@@ -76,22 +76,22 @@ class _homepageState extends State<homepage> {
                     const EdgeInsets.symmetric(horizontal: 5, vertical: 30),
                 child: Row(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       backgroundImage: AssetImage('assets/images/hutao.jpg'),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Hello', style: TextStyle(fontSize: 15)),
+                        Text('Hello', style: TextStyle(fontSize: 15)),
                         Text(
                           '$username!',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    const Icon(Icons.notifications),
+                    Spacer(),
+                    Icon(Icons.notifications),
                   ],
                 ),
               ),
@@ -240,7 +240,7 @@ class _homepageState extends State<homepage> {
                   ],
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 30.0,
               ),
               Column(
@@ -262,20 +262,20 @@ class _homepageState extends State<homepage> {
                                   color: Colors.green[100],
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(10.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
                                   child: FaIcon(
                                     FontAwesomeIcons.check,
                                     color: Colors.green,
                                   ),
                                 ),
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 10.0,
                               ),
-                              const Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                                children: const [
                                   Text(
                                     "Check Up",
                                     style: TextStyle(
@@ -294,7 +294,7 @@ class _homepageState extends State<homepage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: 8.0,
                     ),
                     Expanded(
@@ -312,8 +312,8 @@ class _homepageState extends State<homepage> {
                                 decoration: BoxDecoration(
                                     color: Colors.blue[100],
                                     shape: BoxShape.circle),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(10.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
                                   child: FaIcon(
                                     FontAwesomeIcons.pen,
                                     size: 24.0,
@@ -321,12 +321,12 @@ class _homepageState extends State<homepage> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 10.0,
                               ),
-                              const Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                                children: const [
                                   Text(
                                     "Recepies",
                                     style: TextStyle(
@@ -347,7 +347,7 @@ class _homepageState extends State<homepage> {
                       ),
                     ),
                   ]),
-                  const SizedBox(
+                  SizedBox(
                     height: 10.0,
                   ),
                   Row(children: [
@@ -375,12 +375,12 @@ class _homepageState extends State<homepage> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 10.0,
                               ),
-                              const Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                                children: const [
                                   Text(
                                     "History",
                                     style: TextStyle(
@@ -400,7 +400,7 @@ class _homepageState extends State<homepage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: 8.0,
                     ),
                     Expanded(
@@ -418,8 +418,8 @@ class _homepageState extends State<homepage> {
                                 decoration: BoxDecoration(
                                     color: Colors.red[100],
                                     shape: BoxShape.circle),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(10.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
                                   child: FaIcon(
                                     FontAwesomeIcons.calendar,
                                     size: 21,
@@ -427,12 +427,12 @@ class _homepageState extends State<homepage> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 10.0,
                               ),
-                              const Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                                children: const [
                                   Text(
                                     "Reminder",
                                     style: TextStyle(
@@ -468,11 +468,11 @@ class _homepageState extends State<homepage> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(10.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               'Our Doctor',
                               style: TextStyle(
                                   color: Colors.white,
@@ -484,8 +484,8 @@ class _homepageState extends State<homepage> {
                                   onTap: () {
                                     print('tap');
                                   },
-                                  child: const Row(
-                                    children: [
+                                  child: Row(
+                                    children: const [
                                       Text(
                                         'View More',
                                         style: TextStyle(color: Colors.white),
@@ -599,7 +599,7 @@ class _homepageState extends State<homepage> {
                       ),
                     ],
                   )),
-              const SizedBox(
+              SizedBox(
                 height: 50.0,
               )
             ]),
