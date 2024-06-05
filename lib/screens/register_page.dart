@@ -212,7 +212,7 @@ class RegisterPage extends StatelessWidget {
                 // Social login buttons
                 Row(
                   children: [
-                    const SizedBox(width: 25),
+                    const SizedBox(width: 55),
                     SizedBox(
                       width: 100,
                       child: ElevatedButton(
