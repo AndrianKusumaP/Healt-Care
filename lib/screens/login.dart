@@ -251,8 +251,8 @@ class LoginPage extends StatelessWidget {
 
               // google + apple + facebook
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(width: 55),
                   SizedBox(
                     width: 100,
                     child: ElevatedButton(
