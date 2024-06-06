@@ -31,8 +31,8 @@ class _MedicineState extends State<Medicine> {
             ),
           ),
           backgroundColor: Colors.blue.shade900,
-          iconTheme: IconThemeData(
-            color: Colors.white, // Set the color of the back button here
+          iconTheme: const IconThemeData(
+            color: Colors.white,
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
