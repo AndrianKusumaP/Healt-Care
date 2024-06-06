@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class Medicine extends StatefulWidget {
   const Medicine({super.key});
@@ -92,7 +92,8 @@ class _MedicineState extends State<Medicine> {
                       return GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 10.0,
                           mainAxisSpacing: 10.0,
@@ -101,6 +102,11 @@ class _MedicineState extends State<Medicine> {
                         itemCount: medicines.length,
                         itemBuilder: (context, index) {
                           final medicine = medicines[index];
+                          final price = medicine['price'];
+                          final formattedPrice = NumberFormat.currency(
+                                  locale: 'id_ID', symbol: 'Rp')
+                              .format(price);
+
                           return Card(
                             elevation: 2.0,
                             shape: RoundedRectangleBorder(
@@ -118,12 +124,17 @@ class _MedicineState extends State<Medicine> {
                                     child: Image.network(
                                       medicine['image'],
                                       fit: BoxFit.cover,
-                                      loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null) return child;
-                                        return const Center(child: CircularProgressIndicator());
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return const Center(
+                                            child: CircularProgressIndicator());
                                       },
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return const Center(child: Icon(Icons.error));
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Center(
+                                            child: Icon(Icons.error));
                                       },
                                     ),
                                   ),
@@ -131,7 +142,8 @@ class _MedicineState extends State<Medicine> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         medicine['name'],
@@ -143,7 +155,7 @@ class _MedicineState extends State<Medicine> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        'Rp ${medicine['price']}',
+                                        formattedPrice,
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 14.0,
