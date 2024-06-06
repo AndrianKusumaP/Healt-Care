@@ -24,7 +24,16 @@ class _MedicineState extends State<Medicine> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Medicine'),
+          title: const Text(
+            'Medicine',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: Colors.blue.shade900,
+          iconTheme: IconThemeData(
+            color: Colors.white, // Set the color of the back button here
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -49,6 +58,7 @@ class _MedicineState extends State<Medicine> {
           currentIndex: 0,
           selectedItemColor: Colors.blue[800],
         ),
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
