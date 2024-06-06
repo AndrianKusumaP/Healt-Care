@@ -136,8 +136,9 @@ class _MedicineState extends State<Medicine> {
                                       fit: BoxFit.cover,
                                       loadingBuilder:
                                           (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
+                                        if (loadingProgress == null) {
                                           return child;
+                                        }
                                         return const Center(
                                             child: CircularProgressIndicator());
                                       },
