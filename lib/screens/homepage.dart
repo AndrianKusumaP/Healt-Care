@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:uts/screens/medicine.dart';
 
 class homepage extends StatefulWidget {
   homepage({super.key});
@@ -147,25 +149,34 @@ class _homepageState extends State<homepage> {
                               const Text('List Doctor')
                             ],
                           ),
-                          Column(
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                    color: Colors.blue.shade900,
-                                    borderRadius: BorderRadius.circular(
-                                        10.0)), // Warna isi kotak
-                                child: const Center(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.kitMedical,
-                                    color: Colors.white,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Medicine()),
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue.shade900,
+                                      borderRadius: BorderRadius.circular(
+                                          10.0)), // Warna isi kotak
+                                  child: const Center(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.kitMedical,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 10.0),
-                              const Text('Medicine')
-                            ],
+                                const SizedBox(height: 10.0),
+                                const Text('Medicine')
+                              ],
+                            ),
                           ),
                           Column(
                             children: [
