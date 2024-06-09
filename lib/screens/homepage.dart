@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:uts/screens/doctor_details.dart';
+import 'package:uts/screens/doctor_menu.dart';
 import 'package:uts/screens/medicine.dart';
 
 class homepage extends StatefulWidget {
@@ -543,7 +543,7 @@ class _homepageState extends State<homepage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => DoctorDetailsScreen(doctorId: id),
+                                            builder: (context) => DoctorMenu(doctorId: id),
                                           ),
                                         );
                                       },
