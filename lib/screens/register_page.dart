@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:uts/components/my_textfield.dart';
-import 'package:uts/screens/login.dart';
+import 'package:Health_Care/components/my_textfield.dart';
+import 'package:Health_Care/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

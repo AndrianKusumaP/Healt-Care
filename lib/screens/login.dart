@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:uts/components/my_textfield.dart';
+import 'package:Health_Care/components/my_textfield.dart';
 import 'package:flutter/gestures.dart';
-import 'package:uts/screens/homepage.dart';
-import 'package:uts/screens/register_page.dart';
+import 'package:Health_Care/screens/homepage.dart';
+import 'package:Health_Care/screens/register_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatelessWidget {
