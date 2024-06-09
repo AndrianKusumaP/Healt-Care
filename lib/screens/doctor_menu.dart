@@ -1,217 +1,205 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DoctorMenu extends StatelessWidget {
-  const DoctorMenu({super.key});
+  final String doctorId;
+
+  const DoctorMenu({super.key, required this.doctorId});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Our Doctor'),),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.house),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.solidBell),
-            label: 'Notification',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.gear),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: 0,
-        selectedItemColor: Colors.blue[800],
-      ),
-      backgroundColor: const Color.fromARGB(255, 225, 234, 244),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            
-            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10.0,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 2.1,
-                  decoration: const BoxDecoration(
+    return FutureBuilder<DocumentSnapshot>(
+      future:
+          FirebaseFirestore.instance.collection('doctors').doc(doctorId).get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return const Center(child: Text('No data found'));
+        } else {
+          final doctorData = snapshot.data!;
+          Map<String, dynamic> data = doctorData.data() as Map<String, dynamic>;
+          String name = data['name'] ?? 'Tidak Tersedia';
+          String specialist = data['specialist'] ?? 'Tidak Tersedia';
+          String imageUrl = data['image'] ?? '';
+          String bio = data['bio'] ?? 'Tidak Tersedia';
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(name),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 2.1,
+                    decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/images/Rectangle 374.png'),
+                        image: imageUrl.isNotEmpty
+                            ? NetworkImage(imageUrl)
+                            : const AssetImage('assets/images/doctor_profile.jpg') as ImageProvider,
                         fit: BoxFit.cover,
                       ),
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20.0),
-                          bottomRight: Radius.circular(20.0))),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                        gradient: LinearGradient(
-                      colors: [
-                        const Color.fromRGBO(32, 82, 149, 1).withOpacity(0.9),
-                        const Color.fromRGBO(32, 82, 149, 1).withOpacity(0.3),
-                        const Color.fromRGBO(32, 82, 149, 1).withOpacity(0),
-                      ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    )),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding:
-                              EdgeInsets.only(left: 20, top: 30, right: 20),
-                         
-                        ),
-                        SizedBox(
-                          height: 80,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Patients",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontFamily: 'Poppins',
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    "1.2K",
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white),
-                                  )
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Experience",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontFamily: 'Poppins',
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    "40 yr",
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white),
-                                  )
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Schedule",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontFamily: 'Poppins',
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    "10.00-18.00",
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      ],
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0),
+                      ),
                     ),
-                  ),
-                ),
-                // ignore: prefer_const_constructors
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Dr Chen Xi',
-                        style: TextStyle(
-                          color: Color.fromRGBO(28, 101, 211, 1),
-                          fontSize: 28,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          height: 0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color.fromRGBO(32, 82, 149, 1)
+                                .withOpacity(0.9),
+                            const Color.fromRGBO(32, 82, 149, 1)
+                                .withOpacity(0.3),
+                            const Color.fromRGBO(32, 82, 149, 1).withOpacity(0),
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
                         ),
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Nutritionist',
-                            style: TextStyle(
-                                color: Colors.black.withOpacity(0.8),
-                                fontSize: 17,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w500),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(left: 20, top: 30, right: 20),
+                          ),
+                          SizedBox(
+                            height: 80,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Patients",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "1.2K",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Experience",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "40 yr",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Schedule",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "10.00-18.00",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Text(
-                        "\tLorem ipsum dolor sit amet, consectetur adipiscing elit. Duis efficitur finibus risus eu luctus. Ut at vehicula orci. Aliquam euismod mi eros, vitae ornare erat feugiat ut. Duis accumsan id mi a aliquam. Nulla facilisi. Proin sed mattis lacus. Suspendisse potenti.",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          style: const TextStyle(
+                            color: Color.fromRGBO(28, 101, 211, 1),
+                            fontSize: 28,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
+                            height: 0,
+                          ),
                         ),
-                        textAlign: TextAlign.justify,
-                      ),
-                      const SizedBox(
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Text(
+                              specialist,
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.8),
+                                fontSize: 17,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 15),
+                        Text(
+                          bio,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.justify,
+                        ),
+                        const SizedBox(
                         height: 15,
                       ),
                       Text(
@@ -334,42 +322,45 @@ class DoctorMenu extends StatelessWidget {
                           },
                         ),
                       ),
-                      // ignore: prefer_const_constructors
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Material(
-                        color: const Color.fromRGBO(28, 101, 211, 1),
-                        borderRadius: BorderRadius.circular(10),
-                        child: InkWell(
-                          onTap: () {},
-                          child: SizedBox(
-                            height: 60,
-                            width: MediaQuery.of(context).size.width,
-                            child: const Center(
-                              child: Text(
-                                "Book Appointment",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: "Poppins",
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                        const SizedBox(height: 20.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      
+                    },
+                    child: const Text('Book Appointment'),
                   ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
                 ),
-                SizedBox(
-                  height: 20.0,
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.search),
+                  label: 'Search',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: 'Notification',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  label: 'Settings',
                 ),
               ],
+              currentIndex: 0,
+              selectedItemColor: Colors.blue[800],
             ),
-          ),
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }

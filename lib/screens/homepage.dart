@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:uts/screens/doctor_menu.dart';
 import 'package:uts/screens/medicine.dart';
 
 class homepage extends StatefulWidget {
@@ -114,7 +115,6 @@ class _homepageState extends State<homepage> {
                               Container(
                                 width: 60,
                                 height: 60,
-                                //color: Colors.grey, // Warna isi kotak
                                 decoration: BoxDecoration(
                                     color: Colors.blue.shade900,
                                     borderRadius: BorderRadius.circular(10.0)),
@@ -536,10 +536,16 @@ class _homepageState extends State<homepage> {
                                     final imageUrl = doctor['image'];
                                     final name = doctor['name'];
                                     final specialist = doctor['specialist'];
+                                    final id = doctor.id;
 
                                     return GestureDetector(
                                       onTap: () {
-                                        print('Doctor tapped');
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => DoctorMenu(doctorId: id),
+                                          ),
+                                        );
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(
