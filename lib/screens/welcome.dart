@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:uts/screens/login.dart';
-import 'package:uts/screens/register_page.dart';
+import 'package:Health_Care/screens/login.dart';
+import 'package:Health_Care/screens/register_page.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});

@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:uts/screens/doctor_menu.dart';
-import 'package:uts/screens/medicine.dart';
+import 'package:Health_Care/screens/doctor_menu.dart';
+import 'package:Health_Care/screens/medicine.dart';
 
 class homepage extends StatefulWidget {
   homepage({super.key});
