@@ -1,9 +1,11 @@
+import 'package:Health_Care/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:Health_Care/screens/doctor_menu.dart';
 import 'package:Health_Care/screens/medicine.dart';
+import 'package:get/get.dart';
 
 class homepage extends StatefulWidget {
   homepage({super.key});
@@ -94,6 +96,24 @@ class _homepageState extends State<homepage> {
                     ),
                     const Spacer(),
                     const Icon(Icons.notifications),
+                    PopupMenuButton<String>(
+                      icon: FaIcon(FontAwesomeIcons.gear,size: 20.0,),
+                      onSelected: (value) {
+                        if (value == 'logout') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
+                          );
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'logout',
+                          child: Text('Logout'),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -543,7 +563,8 @@ class _homepageState extends State<homepage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => DoctorMenu(doctorId: id),
+                                            builder: (context) =>
+                                                DoctorMenu(doctorId: id),
                                           ),
                                         );
                                       },
