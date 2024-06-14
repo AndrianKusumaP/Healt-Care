@@ -1,4 +1,5 @@
 import 'package:Health_Care/screens/login.dart';
+import 'package:Health_Care/screens/maps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +97,10 @@ class _homepageState extends State<homepage> {
                     const Spacer(),
                     const Icon(Icons.notifications),
                     PopupMenuButton<String>(
-                      icon: FaIcon(FontAwesomeIcons.gear,size: 20.0,),
+                      icon: FaIcon(
+                        FontAwesomeIcons.gear,
+                        size: 20.0,
+                      ),
                       onSelected: (value) {
                         if (value == 'logout') {
                           Navigator.pushReplacement(
@@ -129,23 +133,31 @@ class _homepageState extends State<homepage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Column(
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                    color: Colors.blue.shade900,
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: const Center(
-                                    child: FaIcon(
-                                  FontAwesomeIcons.mapLocationDot,
-                                  color: Colors.white,
-                                )),
-                              ),
-                              const SizedBox(height: 10.0),
-                              const Text('Map'),
-                            ],
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,MaterialPageRoute(builder: (context) => Maps(),)
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue.shade900,
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                  child: const Center(
+                                      child: FaIcon(
+                                    FontAwesomeIcons.mapLocationDot,
+                                    color: Colors.white,
+                                  )),
+                                ),
+                                const SizedBox(height: 10.0),
+                                const Text('Map'),
+                              ],
+                            ),
                           ),
                           Column(
                             children: [
