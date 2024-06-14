@@ -171,9 +171,3 @@ class _MapsState extends State<Maps> {
     super.dispose();
   }
 }
-
-void main() {
-  runApp(const MaterialApp(
-    home: Maps(),
-  ));
-}
