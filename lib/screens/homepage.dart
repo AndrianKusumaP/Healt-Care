@@ -1,3 +1,4 @@
+import 'package:Health_Care/screens/camera.dart';
 import 'package:Health_Care/screens/login.dart';
 import 'package:Health_Care/screens/maps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +18,7 @@ class _homepageState extends State<homepage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String username = "";
+  
 
   Future<Map<String, dynamic>> getData() async {
     QuerySnapshot querySnapshot = await _firestore.collection('doctors').get();
@@ -95,7 +97,15 @@ class _homepageState extends State<homepage> {
                       ],
                     ),
                     const Spacer(),
-                    const Icon(Icons.notifications),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CameraScreen()),
+                        );
+                      },
+                      child: Icon(Icons.qr_code_scanner_rounded),
+                    ),
                     PopupMenuButton<String>(
                       icon: FaIcon(
                         FontAwesomeIcons.gear,
