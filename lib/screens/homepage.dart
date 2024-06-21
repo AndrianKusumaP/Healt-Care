@@ -18,7 +18,6 @@ class _homepageState extends State<homepage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String username = "";
-  
 
   Future<Map<String, dynamic>> getData() async {
     QuerySnapshot querySnapshot = await _firestore.collection('doctors').get();
@@ -101,7 +100,8 @@ class _homepageState extends State<homepage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => CameraScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => CameraScreen()),
                         );
                       },
                       child: Icon(Icons.qr_code_scanner_rounded),
@@ -146,8 +146,10 @@ class _homepageState extends State<homepage> {
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                context,MaterialPageRoute(builder: (context) => Maps(),)
-                              );
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Maps(),
+                                  ));
                             },
                             child: Column(
                               children: [
@@ -296,213 +298,242 @@ class _homepageState extends State<homepage> {
               ),
               Column(
                 children: [
-                  Row(children: [
-                    Expanded(
-                      flex: 5,
-                      child: Container(
-                        decoration: BoxDecoration(
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: Colors.black26)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(13.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.green[100],
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: FaIcon(
-                                    FontAwesomeIcons.check,
-                                    color: Colors.green,
+                            border: Border.all(color: Colors.black26),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(13.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[100],
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.check,
+                                      color: Colors.green,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Check Up",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16.0,
-                                        color: Colors.green),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Check Up",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16.0,
+                                          color: Colors.green,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        "In Current 7 Days",
+                                        style: TextStyle(fontSize: 12.0),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    "In Current 7 Days",
-                                    style: TextStyle(fontSize: 12.0),
-                                  )
-                                ],
-                              )
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 8.0,
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Container(
-                        decoration: BoxDecoration(
+                      const SizedBox(width: 8.0),
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: Colors.black26)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(13.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black26),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(13.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
                                     color: Colors.blue[100],
-                                    shape: BoxShape.circle),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: FaIcon(
-                                    FontAwesomeIcons.pen,
-                                    size: 24.0,
-                                    color: Colors.blue,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.pen,
+                                      size: 24.0,
+                                      color: Colors.blue,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Recepies",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16.0,
-                                        color:
-                                            Color.fromARGB(255, 18, 79, 170)),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Recepies",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16.0,
+                                          color:
+                                              Color.fromARGB(255, 18, 79, 170),
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        "Your recepies",
+                                        style: TextStyle(fontSize: 12.0),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    "Your recepies",
-                                    style: TextStyle(fontSize: 12.0),
-                                  )
-                                ],
-                              )
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
-                  const SizedBox(
-                    height: 10.0,
+                    ],
                   ),
-                  Row(children: [
-                    Expanded(
-                      flex: 5,
-                      child: Container(
-                        decoration: BoxDecoration(
+                  const SizedBox(height: 10.0),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: Colors.black26)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(13.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black26),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(13.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
                                     color: Colors.purple[100],
-                                    shape: BoxShape.circle),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: FaIcon(
-                                    // ignore: deprecated_member_use
-                                    FontAwesomeIcons.history, size: 20.0,
-                                    color: Colors.purple[500],
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.history,
+                                      size: 20.0,
+                                      color: Colors.purple[500],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "History",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16.0,
-                                        color:
-                                            Color.fromARGB(255, 175, 47, 197)),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "History",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16.0,
+                                          color:
+                                              Color.fromARGB(255, 175, 47, 197),
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        "In Current 30 Days",
+                                        style: TextStyle(fontSize: 12.0),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    "In Current 30 Days",
-                                    style: TextStyle(fontSize: 12.0),
-                                  )
-                                ],
-                              )
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 8.0,
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Container(
-                        decoration: BoxDecoration(
+                      const SizedBox(width: 8.0),
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: Colors.black26)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(13.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black26),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(13.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
                                     color: Colors.red[100],
-                                    shape: BoxShape.circle),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: FaIcon(
-                                    FontAwesomeIcons.calendar,
-                                    size: 21,
-                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.calendar,
+                                      size: 21,
+                                      color: Colors.red,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Reminder",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16.0,
-                                        color: Colors.red),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Reminder",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16.0,
+                                          color: Colors.red,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        "Today",
+                                        style: TextStyle(fontSize: 12.0),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    "Today",
-                                    style: TextStyle(fontSize: 12.0),
-                                  )
-                                ],
-                              )
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ])
+                    ],
+                  ),
                 ],
               ),
               const SizedBox(
