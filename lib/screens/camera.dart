@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/widgets.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -12,9 +11,6 @@ class _CameraScreenState extends State<CameraScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   bool _isCameraInitialized = false;
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
-  QRViewController? _qrViewController;
 
   @override
   void initState() {
@@ -24,13 +20,13 @@ class _CameraScreenState extends State<CameraScreen> {
 
   Future<void> _initializeCamera() async {
     try {
-      // Get available cameras
+      // Ambil kamera yang tersedia
       final cameras = await availableCameras();
 
       // Create CameraController instance
       _controller = CameraController(cameras[0], ResolutionPreset.low);
 
-      // Initialize camera controller
+      // Inisialisasi pengontrol kamera
       _initializeControllerFuture = _controller.initialize();
 
       if (mounted) {
@@ -39,7 +35,7 @@ class _CameraScreenState extends State<CameraScreen> {
         });
       }
     } catch (e) {
-      // Handle errors
+      // Tangani kesalahan
       print('Error initializing camera: $e');
     }
   }
@@ -47,19 +43,7 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void dispose() {
     _controller.dispose();
-    _qrViewController?.dispose();
     super.dispose();
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      _qrViewController = controller;
-    });
-    controller.scannedDataStream.listen((scanData) {
-      // Handle scanned data
-      print('Scanned data: $scanData');
-      // You can use scanData.code to get the scanned QR code or barcode
-    });
   }
 
   @override
@@ -80,21 +64,17 @@ class _CameraScreenState extends State<CameraScreen> {
                   future: _initializeControllerFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      return QRView(
-                        key: qrKey,
-                        onQRViewCreated: _onQRViewCreated,
-                        overlay: QrScannerOverlayShape(
-                          borderColor: Colors.red,
-                          borderRadius: 10,
-                          borderLength: 30,
-                          borderWidth: 10,
-                          cutOutSize: MediaQuery.of(context).size.width * 0.8,
-                        ),
-                      );
+                      return CameraPreview(_controller);
                     } else {
                       return Center(child: CircularProgressIndicator());
                     }
                   },
+                ),
+                Center(
+                  child: CustomPaint(
+                    size: Size(double.infinity, double.infinity),
+                    painter: QRScannerOverlayPainter(),
+                  ),
                 ),
                 Positioned(
                   bottom: 0,
@@ -108,7 +88,9 @@ class _CameraScreenState extends State<CameraScreen> {
                 ),
               ],
             )
-          : Center(child: CircularProgressIndicator()),
+          : Center(
+              child:
+                  CircularProgressIndicator()), // Tampilkan indikator loading saat inisialisasi
     );
   }
 }
@@ -117,26 +99,36 @@ class QRScannerOverlayPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.black.withOpacity(0.5)
+      ..color = Colors.black.withOpacity(0.5) // Warna hitam transparan
       ..style = PaintingStyle.fill;
 
+    // Ukuran kotak pusat
     double boxSize = size.width * 0.8;
+
+    // Posisi kotak pusat
     double left = (size.width - boxSize) / 2;
     double top = (size.height - boxSize) / 2.5;
 
+    // Simpan layer yang ada dan mulai layer baru
     canvas.saveLayer(Rect.fromLTWH(0, 0, size.width, size.height), Paint());
 
+    // Gambar latar belakang semi-transparan
     canvas.drawRect(
       Rect.fromLTWH(0, 0, size.width, size.height),
       paint,
     );
 
+    // Gambar kotak transparan di tengah
     paint.blendMode = BlendMode.clear;
     canvas.drawRect(
       Rect.fromLTWH(left, top, boxSize, boxSize),
       paint,
+    
     );
+   
 
+
+    // Pulihkan canvas layer
     canvas.restore();
   }
 
