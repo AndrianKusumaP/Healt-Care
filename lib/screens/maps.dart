@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geocoding/geocoding.dart'; // Untuk geocoding
+import 'package:geolocator/geolocator.dart'; // Untuk mendapatkan lokasi terkini
 
 class Maps extends StatefulWidget {
   const Maps({super.key});
@@ -28,7 +29,8 @@ class _MapsState extends State<Maps> {
 
   // Method untuk mencari lokasi dari alamat
   Future<void> _searchLocation() async {
-    final query = _searchController.text.trim(); // Menghilangkan spasi di awal dan akhir
+    final query =
+        _searchController.text.trim(); // Menghilangkan spasi di awal dan akhir
     if (query.isEmpty) {
       return; // Menghindari pencarian jika input kosong
     }
@@ -38,19 +40,19 @@ class _MapsState extends State<Maps> {
       if (locations.isNotEmpty) {
         final location = locations.first;
         _center = LatLng(location.latitude, location.longitude);
-        _mapController.move(_center, 19.0); // Pindah dan zoom ke lokasi yang dicari
+        _mapController.move(
+            _center, 17.0); // Pindah dan zoom ke lokasi yang dicari
 
         // Tambahkan marker ke lokasi yang dicari
         setState(() {
           _markers.clear();
           _markers.add(
             Marker(
-              child: Icon(Icons.location_pin,color: Colors.red,size: 40.0,),
+              point: _center,
               width: 80.0,
               height: 80.0,
-              point: _center,
-              
-              
+              builder: (ctx) =>
+                  const Icon(Icons.location_pin, color: Colors.red, size: 40.0),
             ),
           );
         });
@@ -67,6 +69,69 @@ class _MapsState extends State<Maps> {
     }
   }
 
+  // Method untuk mendapatkan lokasi terkini
+  Future<void> _getCurrentLocation() async {
+    print("Getting current location...");
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Memeriksa apakah layanan lokasi diaktifkan
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                'Location services are disabled. Please enable the services')),
+      );
+      return;
+    }
+
+    // Memeriksa status izin lokasi
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Location permissions are denied')),
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                'Location permissions are permanently denied, we cannot request permissions')),
+      );
+      return;
+    }
+
+    // Mendapatkan lokasi terkini
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    _center = LatLng(position.latitude, position.longitude);
+
+    // Pindah dan zoom ke lokasi terkini
+    _mapController.move(_center, 17.0);
+
+    // Tambahkan marker ke lokasi terkini
+    setState(() {
+      _markers.clear();
+      _markers.add(
+        Marker(
+          point: _center,
+          width: 80.0,
+          height: 80.0,
+          builder: (ctx) =>
+              const Icon(Icons.location_pin, color: Colors.blue, size: 40.0),
+        ),
+      );
+    });
+
+    print("Current location: $_center");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +142,12 @@ class _MapsState extends State<Maps> {
         ),
         backgroundColor: Colors.blue.shade900,
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.my_location),
+            onPressed: _getCurrentLocation,
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -106,8 +177,10 @@ class _MapsState extends State<Maps> {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              initialCenter: _center,
-              initialZoom: 9.2,
+              center: _center,
+              zoom: 9.2,
+              minZoom: 2.0, // Contoh nilai minimum zoom
+              maxZoom: 18.0, // Contoh nilai maksimum zoom
             ),
             children: [
               TileLayer(
@@ -148,13 +221,14 @@ class _MapsState extends State<Maps> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 16),
                     ),
                     onSubmitted: (value) => _searchLocation(),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: _searchLocation,
                 ),
               ],
