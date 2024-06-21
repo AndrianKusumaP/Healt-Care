@@ -48,11 +48,12 @@ class _MapsState extends State<Maps> {
           _markers.clear();
           _markers.add(
             Marker(
-              point: _center,
+              child: Icon(Icons.location_pin,color: Colors.red,size: 40.0,),
               width: 80.0,
               height: 80.0,
-              builder: (ctx) =>
-                  const Icon(Icons.location_pin, color: Colors.red, size: 40.0),
+              point: _center,
+              
+              
             ),
           );
         });
@@ -116,18 +117,19 @@ class _MapsState extends State<Maps> {
     _mapController.move(_center, 17.0);
 
     // Tambahkan marker ke lokasi terkini
-    setState(() {
-      _markers.clear();
-      _markers.add(
-        Marker(
-          point: _center,
-          width: 80.0,
-          height: 80.0,
-          builder: (ctx) =>
-              const Icon(Icons.location_pin, color: Colors.blue, size: 40.0),
-        ),
-      );
-    });
+            setState(() {
+          _markers.clear();
+          _markers.add(
+            Marker(
+              child: Icon(Icons.location_pin,color: Colors.blue,size: 40.0,),
+              width: 80.0,
+              height: 80.0,
+              point: _center,
+              
+              
+            ),
+          );
+        });
 
     print("Current location: $_center");
   }
@@ -177,8 +179,8 @@ class _MapsState extends State<Maps> {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              center: _center,
-              zoom: 9.2,
+              initialCenter: _center,
+              initialZoom: 9.2,
               minZoom: 2.0, // Contoh nilai minimum zoom
               maxZoom: 18.0, // Contoh nilai maksimum zoom
             ),
