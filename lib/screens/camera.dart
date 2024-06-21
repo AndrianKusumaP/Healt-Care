@@ -23,8 +23,8 @@ class _CameraScreenState extends State<CameraScreen> {
       // Ambil kamera yang tersedia
       final cameras = await availableCameras();
 
-      // Create CameraController instance
-      _controller = CameraController(cameras[0], ResolutionPreset.low);
+      // Buat instance CameraController
+      _controller = CameraController(cameras[0], ResolutionPreset.high);
 
       // Inisialisasi pengontrol kamera
       _initializeControllerFuture = _controller.initialize();
