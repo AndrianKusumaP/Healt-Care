@@ -1,3 +1,4 @@
+import 'package:Health_Care/screens/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:Health_Care/screens/welcome.dart';
@@ -10,7 +11,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    const GetMaterialApp(
+    GetMaterialApp(
       debugShowCheckedModeBanner: false, 
       home: Welcome(),
     )
