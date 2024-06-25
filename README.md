@@ -5,19 +5,19 @@ Healthcare merupakan aplikasi reservasi dokter dengan berbagai fitur yang dapat 
 ## Design Figma (prototype)
 ![WelcomePage](https://github.com/AndrianKusumaP/Health-Care/blob/main/assets/FotoDump/Screenshot%202024-06-25%20at%2021.52.20.png?raw=true)
 
-2
+
 ![LoginPage](https://github.com/AndrianKusumaP/Health-Care/blob/main/assets/FotoDump/Screenshot%202024-06-25%20at%2021.56.06.png?raw=true)
 
-3
+
 ![RegisterPage](https://github.com/AndrianKusumaP/Health-Care/blob/main/assets/FotoDump/Screenshot%202024-06-25%20at%2021.56.17.png?raw=true)
 
-4
+
 ![Main Menu](https://github.com/AndrianKusumaP/Health-Care/blob/main/assets/FotoDump/Screenshot%202024-06-25%20at%2021.56.49.png?raw=true)
 
-5
+
 ![Doctor Page](https://github.com/AndrianKusumaP/Health-Care/blob/main/assets/FotoDump/Screenshot%202024-06-25%20at%2021.57.01.png?raw=true)
 
-6
+
 ![Doctor 1 page](https://github.com/AndrianKusumaP/Health-Care/blob/main/assets/FotoDump/Screenshot%202024-06-25%20at%2021.57.08.png?raw=true)
 
 ![Schedule made](https://github.com/AndrianKusumaP/Health-Care/blob/main/assets/FotoDump/Screenshot%202024-06-25%20at%2021.57.22.png?raw=true)
